@@ -119,6 +119,46 @@ src/
 3. **Opportunity Pipeline** - By stage (Open/Won/Lost)
 4. **Top Accounts** - Revenue leaderboard
 
+## 🏗️ Architecture
+
+This dashboard follows a **hybrid data architecture** pattern:
+
+### Data Flow
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   Frontend      │────▶│   Next.js API   │────▶│   Dataverse     │
+│   (React)       │     │   Routes        │     │   (CRM Data)    │
+└─────────────────┘     └────────┬────────┘     └─────────────────┘
+                                 │
+                                 ▼
+                        ┌─────────────────┐
+                        │    MongoDB      │
+                        │  (Cache + App)  │
+                        └─────────────────┘
+```
+
+### Why Two Data Sources?
+
+| Component | Role | Data Stored |
+|-----------|------|-------------|
+| **Microsoft Dataverse** | Primary source of truth | Accounts, Contacts, Opportunities (CRM data) |
+| **MongoDB** | Cache + App-specific data | Analytics cache, Custom reports |
+
+### Design Rationale
+
+1. **Enterprise Integration**: In real-world scenarios, business data lives in existing systems like Dynamics 365 or Salesforce. We integrate with these rather than duplicating data.
+
+2. **Performance (Caching)**: Analytics queries across large datasets are expensive. We cache computed metrics in MongoDB with a 5-minute TTL to reduce API calls.
+
+3. **CQRS Pattern**: Command Query Responsibility Segregation — reads come from the cache for speed, writes go to the source of truth for consistency.
+
+4. **Flexibility**: Application-specific features (reports, user preferences) that don't belong in the CRM are stored in MongoDB.
+
+### Demo Mode
+
+For development without Azure credentials, set `DEMO_MODE=true` in `.env.local`. This uses mock data that simulates the Dataverse API responses.
+
 ## 🔒 Security
 
 - OAuth 2.0 client credentials flow for Dataverse
