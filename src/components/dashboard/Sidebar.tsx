@@ -11,6 +11,7 @@ import {
   Settings,
   Database,
   ServerCog,
+  FileCode,
 } from 'lucide-react';
 
 const navigation = [
@@ -20,6 +21,7 @@ const navigation = [
   { name: 'Opportunities', href: '/dashboard/opportunities', icon: TrendingUp },
   { name: 'Reports', href: '/dashboard/reports', icon: FileBarChart },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+  { name: 'API Docs', href: '/dashboard/api-docs', icon: FileCode },
   { name: 'DB Admin', href: '/dashboard/admin', icon: ServerCog },
 ];
 
