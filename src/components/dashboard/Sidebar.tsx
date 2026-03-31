@@ -25,7 +25,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-gray-900 text-white min-h-screen p-4">
+    <aside className="w-64 bg-gray-900 text-white min-h-screen p-4 relative">
       <div className="flex items-center gap-3 px-2 mb-8">
         <div className="p-2 bg-blue-600 rounded-lg">
           <Database className="h-6 w-6" />
