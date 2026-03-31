@@ -10,6 +10,7 @@ import {
   FileBarChart,
   Settings,
   Database,
+  ServerCog,
 } from 'lucide-react';
 
 const navigation = [
@@ -19,6 +20,7 @@ const navigation = [
   { name: 'Opportunities', href: '/dashboard/opportunities', icon: TrendingUp },
   { name: 'Reports', href: '/dashboard/reports', icon: FileBarChart },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+  { name: 'DB Admin', href: '/dashboard/admin', icon: ServerCog },
 ];
 
 export function Sidebar() {
