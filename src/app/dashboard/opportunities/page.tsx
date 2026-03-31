@@ -21,6 +21,17 @@ export default function OpportunitiesPage() {
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<string>('all');
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1 });
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter opportunities based on search
+  const filteredOpportunities = opportunities.filter((opp) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      opp.name?.toLowerCase().includes(query) ||
+      opp.customerid_account?.name?.toLowerCase().includes(query)
+    );
+  });
 
   const fetchOpportunities = useCallback(async (page = 1, isRefresh = false) => {
     try {
@@ -83,6 +94,8 @@ export default function OpportunitiesPage() {
         title="Opportunities" 
         onRefresh={() => fetchOpportunities(pagination.page, true)}
         isRefreshing={refreshing}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
       />
       
       <div className="p-6">
@@ -119,7 +132,7 @@ export default function OpportunitiesPage() {
         ) : (
           <>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {opportunities.map((opp) => {
+              {filteredOpportunities.map((opp) => {
                 const status = statusConfig[opp.statecode as keyof typeof statusConfig] || statusConfig[0];
                 const StatusIcon = status.icon;
 

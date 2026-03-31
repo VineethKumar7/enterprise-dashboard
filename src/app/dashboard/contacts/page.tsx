@@ -13,6 +13,19 @@ export default function ContactsPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1 });
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter contacts based on search
+  const filteredContacts = contacts.filter((contact) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      contact.fullname?.toLowerCase().includes(query) ||
+      contact.emailaddress1?.toLowerCase().includes(query) ||
+      contact.telephone1?.toLowerCase().includes(query) ||
+      contact.jobtitle?.toLowerCase().includes(query)
+    );
+  });
 
   const fetchContacts = useCallback(async (page = 1, isRefresh = false) => {
     try {
@@ -61,6 +74,8 @@ export default function ContactsPage() {
         title="Contacts" 
         onRefresh={() => fetchContacts(pagination.page, true)}
         isRefreshing={refreshing}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
       />
       
       <div className="p-6">
@@ -95,7 +110,7 @@ export default function ContactsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {contacts.map((contact) => (
+                  {filteredContacts.map((contact) => (
                     <tr key={contact.contactid} className="hover:bg-gray-50 cursor-pointer">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">

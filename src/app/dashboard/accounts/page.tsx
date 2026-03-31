@@ -13,6 +13,19 @@ export default function AccountsPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1 });
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter accounts based on search
+  const filteredAccounts = accounts.filter((account) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      account.name?.toLowerCase().includes(query) ||
+      account.emailaddress1?.toLowerCase().includes(query) ||
+      account.telephone1?.toLowerCase().includes(query) ||
+      account.address1_city?.toLowerCase().includes(query)
+    );
+  });
 
   const fetchAccounts = useCallback(async (page = 1, isRefresh = false) => {
     try {
@@ -70,6 +83,8 @@ export default function AccountsPage() {
         title="Accounts" 
         onRefresh={() => fetchAccounts(pagination.page, true)}
         isRefreshing={refreshing}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
       />
       
       <div className="p-6">
@@ -86,7 +101,7 @@ export default function AccountsPage() {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {accounts.map((account) => (
+              {filteredAccounts.map((account) => (
                 <Card key={account.accountid} className="p-6 hover:shadow-md transition-shadow cursor-pointer">
                   <div className="flex items-start gap-4">
                     <div className="p-3 bg-blue-50 rounded-xl">
